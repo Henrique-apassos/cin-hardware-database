@@ -1,0 +1,90 @@
+/* Estilos Gerais*/
+body{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+.cadastro{
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* Header e  Navegação */ 
+header{
+    padding: 1rem 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1)
+}
+
+nav{
+    margin-top: 10px;
+}
+
+nav a{
+    color: #db1e2f;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+nav a:hover{
+    background-color: #616161;
+}
+
+nav a:active{
+    background-color: #e67e22;
+}
+
+/* Estilo do formulário */
+.form-cadastro{
+    background-color: #abc;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+.form-cadastro h2{
+    text-align: center;
+    margin-bottom: 10px;
+}
+.form-group{
+    margin-bottom: 20px;
+}
+.form-group label{
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+.form-group input{
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+form .submit-btn {
+    width: 100%;
+    max-width: 300px; 
+    display: block;   
+    margin: 25px auto 0 auto; 
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #db1e2f; 
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form .submit-btn:hover {
+    background-color: #b91523; 
+}
+
+form .submit-btn:active {
+    background-color: #8c0c17; 
+    transform: translateY(1px);
+}

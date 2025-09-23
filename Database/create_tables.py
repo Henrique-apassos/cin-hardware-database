@@ -8,6 +8,7 @@ def create_tables(conn):
     CPF TEXT PRIMARY KEY,
     NOME TEXT NOT NULL,
     EMAIL TEXT UNIQUE
+    SENHA TEXT NOT NULL
 );
     """)
 
