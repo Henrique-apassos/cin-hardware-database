@@ -1,20 +1,15 @@
 /* Estilos Gerais*/
-body {
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
+body{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     background-color: #f4f4f9;
+    color: #333;
     line-height: 1.6;
 }
 
-.solicita {
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 5px;
-}
-
-hr {
-    border: 0;
-    height: 1px;
-    margin: 20px 0;
+.login_m{
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
 }
 
 /* Header e  Navegação */ 
@@ -44,63 +39,31 @@ nav a:active{
 }
 
 /* Estilo do formulário */
-.form-solicita{
+.form-login{
     background-color: #abc;
-    padding: 25px;
-    border-radius: 8;
+    padding: 30px;
+    border-radius: 8px;
     box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
-
-.form-group{
-    margin-bottom: 15px;
+.form-login h2{
+    text-align: center;
+    margin-bottom: 10px;
 }
-
+.form-group{
+    margin-bottom: 20px;
+}
 .form-group label{
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     font-weight: bold;
 }
-
-.form-group input[type="text"],
-.form-group input[type="date"],
-.form-group input[type="number"],
-.form-group textarea{
+.form-group input{
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
 }
-
-.form-group-inline{
-    display: flex;
-    gap: 20px;
-}
-
-.form-group-inline .form-group{
-    flex: 1;
-}
-
-#item-list li{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-}
-.remove-item-bnt{
-    background-color: #db1e2f;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-}
-.remove-item-btn:hover {
-    background-color: #db1e2f;
-}
-
 form .submit-btn {
     width: 100%;
     max-width: 300px; 
@@ -124,4 +87,15 @@ form .submit-btn:hover {
 form .submit-btn:active {
     background-color: #8c0c17; 
     transform: translateY(1px);
+}
+
+.link-cadastro {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.link-cadastro a {
+    color: #db1e2f;
+    text-decoration: none;
+    font-weight: bold;
 }
