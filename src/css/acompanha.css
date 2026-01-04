@@ -1,0 +1,171 @@
+/* Estilos Gerais*/
+body{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+.acompanha{
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* Header e  Navegação */ 
+header{
+    padding: 1rem 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1)
+}
+
+nav{
+    margin-top: 10px;
+}
+
+nav a{
+    color: #db1e2f;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+nav a:hover{
+    background-color: #616161;
+}
+
+nav a:active{
+    background-color: #e67e22;
+}
+
+/* Cards de Resumo */
+.dashboard-resumo{
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card-status{
+    flex: 1;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-left: 5px solid #28a745;
+}
+
+.card-status h3{ margin: 0; font-size: 1rem; color: #555; }
+.card-status p{ margin: 10px 0 0; font-size: 2rem; font-weight: bold; color: #333; }
+
+.card-status.warning{ border-left-color: #db1e2f; }
+.card-status.attention { border-left-color: #ffc107; }
+
+/* Tabela */
+.table-response{
+    overflow-x: auto;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+th{ background-color: #f8f9fa; font-weight: bold; }
+
+.texto-limitado {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 350px; /* Garante que quebre linha em telas grandes */
+    line-height: 1.4; /* Ajuste fino do espaçamento */
+}
+
+/* Badges de Status */
+.badges{
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-pendente{ background-color: #fff3cd; color: #856404; }
+.badge-ativo{ background-color: #d4edda; color: #155724; }
+.badge-finalizado{ background-color: #d6d8d9; color: #1b1e21; }
+.badge-atrasado{ background-color: #f8d7da; color: #721c24; }
+
+.bnt-detalhes{
+    background: none;
+    border: 1px solid #241786;
+    color: #241786;
+    padding: 8px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+.bnt-detalhes:hover { background-color: #db1e2f; color: white;}
+
+
+/* Janela de Detalhes */
+.modal-overlay{
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content{
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeIn 0.3s;
+}
+
+/* Botão Fechar(X) */
+.close-btn{
+    position: absolute;
+    top: 8px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+.close-btn:hover {color: #db1e2f; }
+
+.modal-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Animação suave de entrada */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

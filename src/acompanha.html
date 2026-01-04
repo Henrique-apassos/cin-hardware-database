@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Meus Pedidos - Lab Hardware</title>
+        <link rel="stylesheet" href="css/acompanha.css">
+        <link rel="icon" href="https://www.cin.ufpe.br/~imprensa/marcacinpng/SC" type="image/png">
+        <script src="js/acompanha.js"></script>
+    </head>
+    <body>
+      <header>
+            <h1> Laboratório de Hardware </h1>
+            <nav>
+                <a href="solicita.html" class="active">Nova Solicitação</a>
+                <a href="acompanha.html" class="active">Meus Pedidos</a>
+                <a href="login.html" style="float: right;">Sair</a>
+            </nav>
+        </header>
+
+        <main class="acompanha">
+            <section class="dashboard-resumo">
+                <div class="card-status">
+                    <h3>Em posse</h3>
+                    <p id="count-ativos">0</p>
+                </div>
+                <div class="card-status">
+                    <h3>Pendentes</h3>
+                    <p id="count-pendentes">0</p>
+                </div>
+                <div class="card-status">
+                    <h3>Atrasados</h3>
+                    <p id="count-atrasados">0</p>
+                </div>
+            </section>
+
+            <section class="lista-pedidos">
+                <h2>Histórico de Solicitações</h2>
+                <div class="table-responsive">
+                    <table id="tabela-pedidos">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Data Pedido</th>
+                                <th>Itens Solicitados</th>
+                                <th>Previsão de Devolução</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-corpo">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <div id="modal-detalhes" class="modal-overlay">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+
+                <div class="modal-header">
+                    <h2>Detalhes da Solicitação #<span id="m-id"></span></h2>
+                    <span id="m-status" class="bridges"></span>
+                </div>
+
+                <div class="modal-body">
+                    <p><strong>Data do Pedido:</strong> <span id="m-data-sol"></span></p>
+                    <p><strong>Previsão de Devolução:</strong> <span id="m-data-ent"></span></p>
+
+                    <hr>
+
+                    <h3>Itens Solicitados</h3>
+                    <ul id="m-lista-itens">
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
