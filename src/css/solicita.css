@@ -1,12 +1,12 @@
 /* Estilos Gerais*/
 body {
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     background-color: #f4f4f9;
     line-height: 1.6;
 }
 
 .solicita {
-    max-width: 900px;
+    max-width: 1150px;
     margin: 20px auto;
     padding: 5px;
 }
@@ -24,6 +24,83 @@ header{
     box-shadow: 0 2px 4px rgba(0,0,0,0.1)
 }
 
+.main-header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-top: 4px solid #db1e2f;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 70px; /* Altura fixa para alinhar tudo */
+    display: flex;
+    justify-content: space-between; /* Espalha: Logo na esq, Menu na dir */
+    align-items: center; /* Centraliza verticalmente */
+}
+
+/* --- Marca / Logo --- */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #333;
+}
+
+.logo-cin {
+    height: 80px; /* Tamanho controlado da imagem */
+    width: auto;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.system-name {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.dept-name {
+    font-size: 0.8rem;
+    color: #888;
+    font-weight: 500;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Espaço entre os botões */
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+.nav-link:hover {
+    background-color: #f4f4f9;
+    color: #db1e2f; /* Vermelho CIn */
+}
+
+.nav-link.active {
+    background-color: #fff0f1; /* Vermelho bem clarinho */
+    color: #db1e2f;
+}
+
 nav{
     margin-top: 10px;
 }
@@ -36,16 +113,34 @@ nav a{
 }
 
 nav a:hover{
-    background-color: #616161;
+    color: #555;
 }
 
 nav a:active{
-    background-color: #e67e22;
+    background-color: #db1e2f;
+    color: #fff;
+}
+
+.separator {
+    width: 1px;
+    height: 25px;
+    background-color: #ddd;
+    margin: 0 10px;
+}
+
+.btn-sair {
+    color: #db1e2f;
+    border: 1px solid transparent;
+}
+.btn-sair:hover {
+    background-color: #db1e2f;
+    color: white;
+    box-shadow: 0 4px 6px rgba(219, 30, 47, 0.2);
 }
 
 /* Estilo do formulário */
 .form-solicita{
-    background-color: #abc;
+    background-color: #ccc;
     padding: 25px;
     border-radius: 8;
     box-shadow: 0 0 15px rgba(0,0,0,0.1);
@@ -124,4 +219,93 @@ form .submit-btn:hover {
 form .submit-btn:active {
     background-color: #8c0c17; 
     transform: translateY(1px);
+}
+
+/* Caixa de sugestões flutuante */
+.sugestoes-box{
+    position: relative;
+    background: white;
+    width: 100%;
+    left: 0;
+    box-sizing: border-box;
+    max-height: 200px;
+    overflow-y: auto; /* Barra de rolagem se tiver muitos itens */
+    border: 1px solid #ccc;
+    border-top: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border-radius: 0 0 4px 4px;
+}
+
+/* Item da lista */
+.sugestoes-box li{
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sugestoes-box li:hover{
+    background-color: #f4f4f9;
+    color: #db1e2f;
+}
+
+.nome-item{
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.meta-item{
+    font-size: 0.85rem;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.categoria-badge{
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/*--- Responsividade para Celular (Header Principal)---*/
+
+@media (max-width: 768px){
+    .header-container{
+        height: auto;
+        padding: 15px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-menu{
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .nav-link{
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        background-color: #f9f9f9;
+    }
+    .separator{
+        display: none;
+    }
+
+    .system-name{ font-size: 1rem; }
+    .dept-name{ display: none; }
 }

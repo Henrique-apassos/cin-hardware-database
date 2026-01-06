@@ -162,4 +162,90 @@ document.addEventListener('DOMContentLoaded', function() { // Aguarda o document
         console.log("Dados a serem enviados para o servidor:", dadosSolicitacao);
         alert('Solicitação enviada! (Verifique o console do navegador para ver os dados)');
     });
+    
+    // Banco Simulado
+    const bancoComponentes = [
+        { 
+            id: 1, 
+            nome: "CI TL074CN", 
+            descricao: "Amp Op Quad JFET", 
+            estoque: 12 
+        },
+        { 
+            id: 2, 
+            nome: "Arduino Uno R3", 
+            descricao: "Microcontrolador ATmega328P", 
+            estoque: 15 
+        },
+        { 
+            id: 3, 
+            nome: "Resistor 10kΩ", 
+            descricao: "Resistor 1/4W", 
+            estoque: 500 
+        },
+        { 
+            id: 4, 
+            nome: "Multímetro Minipa", 
+            descricao: "Instrumentação", 
+            estoque: 5 
+        }
+    ];
+
+    const inputItem = document.getElementById('tipo_item');
+    const inputId = document.getElementById('id_tipo_selecionado'); // Input Hidden
+    const listaSugestoes = document.getElementById('lista-sugestoes');
+
+    inputItem.addEventListener('input', function() {
+        const textoDigitado = this.value.toLowerCase();
+        listaSugestoes.innerHTML = ''; 
+
+        if (textoDigitado.length === 0) {
+            listaSugestoes.style.display = 'none';
+            return;
+        }
+
+        const encontrados = bancoComponentes.filter(item => 
+            item.nome.toLowerCase().includes(textoDigitado) || 
+            item.descricao.toLowerCase().includes(textoDigitado)
+        );
+
+        if (encontrados.length > 0) {
+            encontrados.forEach(item => {
+                const li = document.createElement('li');
+                
+                // --- LAYOUT SIMPLIFICADO ---
+                li.innerHTML = `
+                    <span class="nome-item">${item.nome}</span>
+                    <div class="meta-item">
+                        <span class="categoria-badge">${item.descricao}</span>
+                        <span class="estoque-text">Estoque: ${item.estoque}</span>
+                    </div>
+                `;
+
+                li.addEventListener('click', function() {
+                    inputItem.value = item.nome; 
+                    
+                    // Salva o ID para o Backend
+                    if(inputId) inputId.value = item.id; 
+
+                    listaSugestoes.style.display = 'none';
+                    
+                    const qtdInput = document.getElementById('quantidade');
+                    if(qtdInput) qtdInput.focus();
+                });
+
+                listaSugestoes.appendChild(li);
+            });
+            listaSugestoes.style.display = 'block';
+        } else {
+            listaSugestoes.style.display = 'none';
+        }
+    });
+
+    // Fecha ao clicar fora
+    document.addEventListener('click', function(e) {
+        if (e.target !== inputItem && e.target !== listaSugestoes) {
+            listaSugestoes.style.display = 'none';
+        }
+    });
 });

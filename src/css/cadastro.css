@@ -7,7 +7,7 @@ body{
 }
 
 .cadastro{
-    max-width: 500px;
+    max-width: 1000px;
     margin: 30px auto;
     padding: 20px;
 }
@@ -17,6 +17,66 @@ header{
     padding: 1rem 0;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1)
+}
+
+.login-header {
+    background-color: #ffffff;
+    height: 70px;
+    width: 100%;
+    border-top: 4px solid #db1e2f; /* Identidade CIn */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Sombra suave para destacar do fundo */
+    display: flex;
+    justify-content: center; /* Centraliza o conteúdo na tela */
+    position: relative;
+    z-index: 10;
+}
+
+.container-header {
+    width: 100%;
+    max-width: 1200px; /* Alinha com o resto do site */
+    padding: 0 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Marca */
+.brand-login {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-cin {
+    height: 80px; /* Tamanho discreto */
+    width: auto;
+}
+
+/* Linha fina cinza separando o logo do texto */
+.divider-vertical {
+    width: 1px;
+    height: 35px;
+    background-color: #e0e0e0;
+}
+
+.system-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sys-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #333;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.sys-subtitle {
+    font-size: 0.8rem;
+    color: #888;
+    font-weight: 500;
 }
 
 nav{
@@ -40,7 +100,7 @@ nav a:active{
 
 /* Estilo do formulário */
 .form-cadastro{
-    background-color: #abc;
+    background-color: #ccc;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 0 15px rgba(0,0,0,0.1);
@@ -87,4 +147,26 @@ form .submit-btn:hover {
 form .submit-btn:active {
     background-color: #8c0c17; 
     transform: translateY(1px);
+}
+
+/*--- Responsividade para celular ---*/
+@media(max-width: 600px){
+    .login-header{
+        height: 64px;
+        padding: 0;
+    }
+    .container-header{
+        justify-content: center;
+    }
+
+    .sys-subtitle,
+    .divider-vertical{
+        display: none;
+    }
+    .logo-cin{ height: 30px; }
+    .sys-title{ font-size: 1rem; }
+
+    .brand-login{
+        gap: 10px;
+    }
 }

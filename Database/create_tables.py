@@ -7,7 +7,7 @@ def create_tables(conn):
     CREATE TABLE IF NOT EXISTS pessoa_fisica (
     CPF TEXT PRIMARY KEY,
     NOME TEXT NOT NULL,
-    EMAIL TEXT UNIQUE
+    EMAIL TEXT UNIQUE,
     SENHA TEXT NOT NULL
 );
     """)

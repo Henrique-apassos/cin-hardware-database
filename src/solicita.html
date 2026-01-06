@@ -9,12 +9,24 @@
         <script src="js/solicita.js"></script>
     </head>
     <body>
-        <header>
-            <h1> Laboratório de Hardware </h1>
-            <nav>
-                <a href="login.html" class="active">Fazer Login</a>
-                <a href="solicita.html" class="active">Fazer Solicitação</a>
-            </nav>
+        <header class="main-header">
+            <div class="header-container">
+                <div class="brand">
+                    <img src="https://www.cin.ufpe.br/~imprensa/marcacinpng/SC" alt="Logo CIn" class="logo-cin">
+                    <div class="brand-text">
+                        <span class="system-name">Laboratório de Hardware</span>
+                        <span class="dept-name">CIn - UFPE</span>
+                    </div>
+                </div>
+                <nav class="nav-menu">
+                    <a href="solicita.html" class="nav-link active">Fazer Solicitação</a>
+                    <a href="acompanha.html" class="nav-link">Meus Pedidos</a>
+
+                    <div class="separator"></div> <a href="login.html" class="nav-link btn-sair">
+                        Sair <span style="font-size: 1.2rem;">&rarr;</span>
+                    </a>
+                </nav>
+            </div>
         </header>
         <main class="solicita">
             <section class="form-solicita">
@@ -41,7 +53,10 @@
                     <div class="item-adder">
                         <div class="form-group">
                             <label for="tipo_item">Componente</label>
-                            <input type="text" id="tipo_item" name="tipo_item" placeholder="Arduino Uno" required>
+                            <input type="text" id="tipo_item" name="tipo_item" placeholder="Digite para buscar..." autocomplete="off" required>
+                            <input type="hidden" id="id_tipo_selecionado" name="id_tipo_item">
+
+                            <ul id="lista-sugestoes" class="sugestoes-box"></ul>
                         </div>
                         <div class="form-group">
                             <label for="quantidade">Quantidade</label>
