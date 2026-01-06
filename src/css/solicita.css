@@ -176,24 +176,92 @@ nav a:active{
     flex: 1;
 }
 
-#item-list li{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-}
-.remove-item-bnt{
-    background-color: #db1e2f;
+#add-item-btn {
+    background-color: #333; /* Cinza escuro para diferenciar do botão vermelho principal */
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 12px;
+    transition: background-color 0.3s ease, transform 0.1s;
+    margin-top: 10px;
+    
+    /* Ícone visual de "+" antes do texto */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
+
+#add-item-btn::before {
+    content: "+";
+    font-size: 1.2rem;
+    line-height: 0;
+    margin-bottom: 2px;
+}
+
+#add-item-btn:hover {
+    background-color: #000; /* Fica preto no hover */
+    transform: translateY(-1px);
+}
+
+#add-item-btn:active {
+    transform: translateY(0);
+}
+
+/* Lista de itens adicionados */
+#item-list{
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#item-list li{
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-left: 4px solid #db1e2f;
+    display: flex;
+    padding: 12px 15px;
+    border-radius: 6px;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2 ease;
+}
+
+#item-list li:hover{
+    transform: translateX(2px);
+    border-color: #ccc;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#item-list li span{
+    font-size: 0.95rem;
+    color: #333;
+    font-weight: 500;
+}
+.remove-item-btn {
+    background-color: transparent; 
+    color: #dc3545; 
+    border: 1px solid #dc3545;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+}
+
 .remove-item-btn:hover {
-    background-color: #db1e2f;
+    background-color: #dc3545;
+    color: white; 
+    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
 }
 
 form .submit-btn {
@@ -256,6 +324,12 @@ form .submit-btn:active {
     color: #db1e2f;
 }
 
+.sugestoes-box li.active {
+    background-color: #f4f4f9;
+    border-left: 4px solid #db1e2f; 
+    font-weight: bold;
+}
+
 .nome-item{
     font-weight: bold;
     font-size: 1rem;
@@ -281,9 +355,100 @@ form .submit-btn:active {
     text-transform: uppercase;
 }
 
-/*--- Responsividade para Celular (Header Principal)---*/
+/* --- Modal de Confirmação --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Fundo escuro transparente */
+    z-index: 2000;
+    display: flex; /* Centraliza o conteúdo */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-header h2 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #db1e2f;
+    padding-bottom: 10px;
+}
+
+/* Lista dentro do modal */
+.lista-resumo {
+    list-style: none;
+    padding: 0;
+    background: #f9f9f9;
+    border-radius: 4px;
+    border: 1px solid #eee;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.lista-resumo li {
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.aviso-conf {
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: 15px;
+    font-style: italic;
+}
+
+/* Botões do Modal */
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.btn-primario {
+    background-color: #28a745; /* Verde Sucesso */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+}
+.btn-primario:hover { background-color: #218838; }
+
+.btn-secundario {
+    background-color: #e2e6ea; /* Cinza */
+    color: #495057;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-secundario:hover { background-color: #dbe0e5; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/*--- Responsividade para Celular---*/
 
 @media (max-width: 768px){
+    /* Header e Navegação */
     .header-container{
         height: auto;
         padding: 15px;
@@ -308,4 +473,15 @@ form .submit-btn:active {
 
     .system-name{ font-size: 1rem; }
     .dept-name{ display: none; }
+
+    /* Lista de itens adicionados */
+    #item-list li {
+        flex-direction: column; 
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .remove-item-btn {
+        width: 100%;
+    }
 }

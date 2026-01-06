@@ -53,7 +53,7 @@
                     <div class="item-adder">
                         <div class="form-group">
                             <label for="tipo_item">Componente</label>
-                            <input type="text" id="tipo_item" name="tipo_item" placeholder="Digite para buscar..." autocomplete="off" required>
+                            <input type="text" id="tipo_item" name="tipo_item" placeholder="Digite para buscar..." autocomplete="off">
                             <input type="hidden" id="id_tipo_selecionado" name="id_tipo_item">
 
                             <ul id="lista-sugestoes" class="sugestoes-box"></ul>
@@ -72,5 +72,28 @@
                 </form>
             </section>
         </main>
+        <div id="modal-confirmacao" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Confirme sua Solicitação</h2>
+                </div>
+            
+                <div class="modal-body">
+                    <p><strong>CPF:</strong> <span id="conf-cpf"></span></p>
+                    <p><strong>Data Retirada:</strong> <span id="conf-data"></span></p>
+                
+                    <p><strong>Itens:</strong></p>
+                    <ul id="conf-lista-itens" class="lista-resumo">
+                    </ul>
+                
+                    <p class="aviso-conf">Confira os dados antes de enviar.</p>
+                </div>
+            
+                <div class="modal-footer">
+                    <button id="btn-cancelar-envio" class="btn-secundario">Voltar e Corrigir</button>
+                    <button id="btn-confirmar-envio" class="btn-primario">Confirmar Solicitação</button>
+                </div>
+            </div>
+        </div>
     </body>
 </html> 

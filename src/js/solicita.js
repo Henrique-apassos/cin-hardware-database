@@ -49,7 +49,178 @@ document.addEventListener('DOMContentLoaded', function() { // Aguarda o document
     const itemList = document.getElementById('item-list');
     const solicitaForm = document.getElementById('solicita-form');
 
+    const modalConfirmacao = document.getElementById('modal-confirmacao');
+    const btnConfirmarEnvio = document.getElementById('btn-confirmar-envio');
+    const btnCancelarEnvio = document.getElementById('btn-cancelar-envio');
+
     let itensDaSolicitacao = []; // Armazena os itens em um array
+    let dadosProntosParaEnvio = null;
+
+    // Banco Simulado
+    const bancoComponentes = [
+        { 
+            id: 1, 
+            nome: "CI TL074CN", 
+            descricao: "Amp Op Quad JFET", 
+            estoque: 12 
+        },
+        { 
+            id: 2, 
+            nome: "Arduino Uno R3", 
+            descricao: "Microcontrolador ATmega328P", 
+            estoque: 15 
+        },
+        { 
+            id: 3, 
+            nome: "Resistor 10kΩ", 
+            descricao: "Resistor 1/4W", 
+            estoque: 500 
+        },
+        { 
+            id: 4, 
+            nome: "Multímetro Minipa", 
+            descricao: "Instrumentação", 
+            estoque: 5 
+        }
+    ];
+
+    // Busca de componentes
+    const inputsItem = [
+        document.getElementById('tipo_item'),
+        document.getElementById('quantidade')
+    ];
+
+    const inputItem = document.getElementById('tipo_item');
+    const inputId = document.getElementById('id_tipo_selecionado'); // Input Hidden
+    const listaSugestoes = document.getElementById('lista-sugestoes');
+
+    let currentFocus = -1 // Variável que diz qual item está selecionado (-1 = nenhum)
+
+    inputItem.addEventListener('input', function() {
+        const textoDigitado = this.value.toLowerCase();
+        listaSugestoes.innerHTML = '';
+        currentFocus = -1;
+
+        if (textoDigitado.length === 0) {
+            listaSugestoes.style.display = 'none';
+            return;
+        }
+
+        const encontrados = bancoComponentes.filter(item => 
+            item.nome.toLowerCase().includes(textoDigitado) || 
+            item.descricao.toLowerCase().includes(textoDigitado)
+        );
+
+        if (encontrados.length > 0) {
+            encontrados.forEach(item => {
+                const li = document.createElement('li');
+                
+                // --- LAYOUT SIMPLIFICADO ---
+                li.innerHTML = `
+                    <span class="nome-item">${item.nome}</span>
+                    <div class="meta-item">
+                        <span class="categoria-badge">${item.descricao}</span>
+                        <span class="estoque-text">Estoque: ${item.estoque}</span>
+                    </div>
+                `;
+
+                li.addEventListener('click', function() {
+                   selecionarItem(item)
+                });
+
+                listaSugestoes.appendChild(li);
+            });
+            listaSugestoes.style.display = 'block';
+        }
+        else {
+            listaSugestoes.style.display = 'none';
+        }
+    });
+
+    // Função auxiliar de adicioar um item
+    function selecionarItem(item) {
+        inputItem.value = item.nome;
+
+        // Salva o ID para o Backend
+        if (inputId) inputId.value = item.id;
+
+        listaSugestoes.style.display = 'none';
+        listaSugestoes.innerHTML = '';
+
+        setTimeout(function(){
+            const qtdInput = document.getElementById('quantidade');
+            if(qtdInput){
+                qtdInput.focus();
+                qtdInput.select();
+            }
+        }, 10);
+    }
+
+    // Controle por teclado
+    inputItem.addEventListener('keydown', function(e) {
+        let itensVisiveis = listaSugestoes.getElementsByTagName('li');
+        
+        if (listaSugestoes.style.display === 'none' || itensVisiveis.length === 0) {
+            return; 
+        }
+
+        if (e.key === 'ArrowDown') { // Seta Baixo
+            e.preventDefault(); 
+            
+            currentFocus++;
+            addActive(itensVisiveis);
+        } 
+        else if (e.key === 'ArrowUp') { // Seta Cima
+            e.preventDefault();
+
+            currentFocus--;
+            addActive(itensVisiveis);
+        } 
+        else if (e.key === 'Enter') {
+            // Se o Enter for apertado e tiver item focado
+            if (currentFocus > -1) {
+                e.preventDefault(); 
+                
+                if (itensVisiveis && itensVisiveis[currentFocus]) {
+                    itensVisiveis[currentFocus].click(); // Simula o clique no item colorido
+                }
+            }
+        }
+        else if (e.key === 'Escape') {
+            listaSugestoes.style.display = 'none';
+            currentFocus = -1;
+        }
+    });
+
+    // Função de printar o item ativo
+    function addActive(x) {
+        if (!x) return false;
+        
+        removeActive(x); // Primeiro limpa todos
+        
+        if (currentFocus >= x.length) currentFocus = 0; // Se passar do fim, volta pro topo
+        if (currentFocus < 0) currentFocus = (x.length - 1); // Se passar do topo, vai pro fim
+        
+        // Adiciona a classe visual '.active'
+        x[currentFocus].classList.add("active");
+        
+        // Garante que o scroll da lista acompanhe o item selecionado
+        x[currentFocus].scrollIntoView({ block: 'nearest' });
+    }
+
+    // 2. Remove a pintura de todos os itens
+    function removeActive(x) {
+        for (let i = 0; i < x.length; i++) {
+            x[i].classList.remove("active");
+        }
+    }
+
+    // Fecha ao clicar fora
+    document.addEventListener('click', function(e) {
+        if (e.target !== inputItem && e.target !== listaSugestoes) {
+            listaSugestoes.style.display = 'none';
+        }
+    });
 
     // Função para renderizar/atualizar a lista visual
     function renderizarLista(){
@@ -80,25 +251,83 @@ document.addEventListener('DOMContentLoaded', function() { // Aguarda o document
     addItemBtn.addEventListener('click', function() {
         const tipoItemInput = document.getElementById('tipo_item');
         const quantidadeInput = document.getElementById('quantidade');
+        const idInput = document.getElementById('id_tipo_selecionado');
 
-       const nomeItem = tipoItemInput.value.trim();
-       const quantidade = parseInt(quantidadeInput.value, 10);
+        const idItem = idInput.value ? parseInt(idInput.value, 10) : null;
+        const nomeItem = tipoItemInput.value.trim();
+        const quantidade = parseInt(quantidadeInput.value, 10);
 
        // Validação para não adicionar itens em branco
-       if(nomeItem && quantidade > 0){
-        itensDaSolicitacao.push({nome: nomeItem, qtd: quantidade});
+        if(nomeItem && quantidade > 0){
+            
+            // 1. Busca o item no Banco Oficial
+            let itemOriginal = bancoComponentes.find(i => i.id === idItem);
+            
+            if (!itemOriginal) {
+                itemOriginal = bancoComponentes.find(i => i.nome.toLowerCase() === nomeItem.toLowerCase());
+            }
 
-       //Cria um novo elemento de lista para mostrar o item
-       renderizarLista();
+            if (itemOriginal) {
+                // 2. Verifica se o item JÁ EXISTE na lista de solicitação
+                const indexExistente = itensDaSolicitacao.findIndex(i => i.id === itemOriginal.id);
+                
+                // Calcula quanto já temos desse item no carrinho
+                let qtdAtualNoCarrinho = 0;
+                if (indexExistente !== -1) {
+                    qtdAtualNoCarrinho = itensDaSolicitacao[indexExistente].qtd;
+                }
 
-       // Limpa os campos de Input 
-       //tipoItemInput.value = '';
-       quantidadeInput.value = '1';
-       tipoItemInput.focus() // Coloca o foco de volta no campo do item
-       }
-       else{
-        alert("Preencha o nome do componente e a quantidade");
-       }
+                // 3. Verificação de Estoque (Soma o que já tem + o novo pedido)
+                const totalDesejado = qtdAtualNoCarrinho + quantidade;
+
+                if (totalDesejado > itemOriginal.estoque) {
+                    let msg = `Estoque insuficiente para "${itemOriginal.nome}"!\n`;
+                    msg += `\n Estoque Total: ${itemOriginal.estoque}`;
+                    msg += `\n Já no seu carrinho: ${qtdAtualNoCarrinho}`;
+                    msg += `\n Tentativa atual: ${quantidade}`;
+                    msg += `\n Total ficaria: ${totalDesejado}`;
+                    
+                    alert(msg);
+                    
+                    quantidadeInput.focus();
+                    quantidadeInput.select();
+                    return; 
+                }
+
+                // --- 4. A MÁGICA DO MERGE ---
+                if (indexExistente !== -1) {
+                    // CENÁRIO A: Item já existe -> Apenas atualiza a quantidade
+                    itensDaSolicitacao[indexExistente].qtd += quantidade;
+                    console.log(`Atualizado: ${itemOriginal.nome} agora tem ${itensDaSolicitacao[indexExistente].qtd}`);
+                } else {
+                    // CENÁRIO B: Item novo -> Cria nova linha
+                    // Atualiza o ID caso tenha achado pelo nome
+                    if(!idItem && idInput) idInput.value = itemOriginal.id;
+
+                    itensDaSolicitacao.push({
+                        id: itemOriginal.id,
+                        nome: itemOriginal.nome, 
+                        qtd: quantidade
+                    });
+                }
+
+            } else {
+                alert("Erro: Item não identificado no catálogo oficial.");
+                return;
+            }
+
+            // Atualiza a tela
+            renderizarLista();
+
+            // Limpeza
+            tipoItemInput.value = '';
+            quantidadeInput.value = '1';
+            if(idInput) idInput.value = ''; 
+            tipoItemInput.focus();
+
+        } else {
+            alert("Preencha o nome do componente e a quantidade");
+        }
     });
 
     // Função para remover um item ao clique do botão
@@ -115,6 +344,31 @@ document.addEventListener('DOMContentLoaded', function() { // Aguarda o document
         }
     });
 
+    // Enter para adicionar item
+    const inputQtd = document.getElementById('quantidade');
+    if(inputQtd) {
+        inputQtd.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); 
+                addItemBtn.click(); // Adiciona à lista
+            }
+        });
+    }
+    inputItem.addEventListener('keydown', function(event) {
+       if (event.key === 'Enter') {
+           // Se a lista estiver fechada ou vazia, o Enter serve como "TAB" (vai pro próximo campo)
+           if(listaSugestoes.style.display === 'none' || listaSugestoes.innerHTML === '') {
+               event.preventDefault();
+               const qtdInput = document.getElementById('quantidade');
+               if(qtdInput) {
+                   qtdInput.focus();
+                   qtdInput.select();
+               }
+           }
+       } 
+    });
+
+    // Lógica de Submição
     solicitaForm.addEventListener('submit', function(event){
         event.preventDefault() // Previne o comportamento padrão de recarregar a pagina
 
@@ -150,102 +404,65 @@ document.addEventListener('DOMContentLoaded', function() { // Aguarda o document
             return;
         }
 
-        // Montando o objeto final com todos os itens da solicitação
-        const dadosSolicitacao = {
+        // Confirmação de dados
+        dadosProntosParaEnvio = {
             cpf: cpf,
             descricao: descricao,
             dataEntrega: dataEntrega,
             itens: itensDaSolicitacao
         };
 
-        // Exibe os dados no console do navegador (F12) para teste
-        console.log("Dados a serem enviados para o servidor:", dadosSolicitacao);
-        alert('Solicitação enviada! (Verifique o console do navegador para ver os dados)');
-    });
-    
-    // Banco Simulado
-    const bancoComponentes = [
-        { 
-            id: 1, 
-            nome: "CI TL074CN", 
-            descricao: "Amp Op Quad JFET", 
-            estoque: 12 
-        },
-        { 
-            id: 2, 
-            nome: "Arduino Uno R3", 
-            descricao: "Microcontrolador ATmega328P", 
-            estoque: 15 
-        },
-        { 
-            id: 3, 
-            nome: "Resistor 10kΩ", 
-            descricao: "Resistor 1/4W", 
-            estoque: 500 
-        },
-        { 
-            id: 4, 
-            nome: "Multímetro Minipa", 
-            descricao: "Instrumentação", 
-            estoque: 5 
-        }
-    ];
+        if(document.getElementById('conf-cpf'))
+            document.getElementById('conf-cpf').textContent = cpf;
+        
+        if(document.getElementById('conf-data'))
+            document.getElementById('conf-data').textContent = dataEntrega.split('-').reverse().join('/');
 
-    const inputItem = document.getElementById('tipo_item');
-    const inputId = document.getElementById('id_tipo_selecionado'); // Input Hidden
-    const listaSugestoes = document.getElementById('lista-sugestoes');
-
-    inputItem.addEventListener('input', function() {
-        const textoDigitado = this.value.toLowerCase();
-        listaSugestoes.innerHTML = ''; 
-
-        if (textoDigitado.length === 0) {
-            listaSugestoes.style.display = 'none';
-            return;
-        }
-
-        const encontrados = bancoComponentes.filter(item => 
-            item.nome.toLowerCase().includes(textoDigitado) || 
-            item.descricao.toLowerCase().includes(textoDigitado)
-        );
-
-        if (encontrados.length > 0) {
-            encontrados.forEach(item => {
+        const listaResumo = document.getElementById('conf-lista-itens');
+        if(listaResumo){
+            listaResumo.innerHTML = '';
+            itensDaSolicitacao.forEach(item => {
                 const li = document.createElement('li');
-                
-                // --- LAYOUT SIMPLIFICADO ---
-                li.innerHTML = `
-                    <span class="nome-item">${item.nome}</span>
-                    <div class="meta-item">
-                        <span class="categoria-badge">${item.descricao}</span>
-                        <span class="estoque-text">Estoque: ${item.estoque}</span>
-                    </div>
-                `;
-
-                li.addEventListener('click', function() {
-                    inputItem.value = item.nome; 
-                    
-                    // Salva o ID para o Backend
-                    if(inputId) inputId.value = item.id; 
-
-                    listaSugestoes.style.display = 'none';
-                    
-                    const qtdInput = document.getElementById('quantidade');
-                    if(qtdInput) qtdInput.focus();
-                });
-
-                listaSugestoes.appendChild(li);
+                li.textContent = `${item.qtd}x - ${item.nome}`;
+                listaResumo.appendChild(li);
             });
-            listaSugestoes.style.display = 'block';
-        } else {
-            listaSugestoes.style.display = 'none';
+        }
+
+        if(modalConfirmacao){
+            modalConfirmacao.style.display = 'flex';
+        }
+        else{
+            console.error("ERRO: Modal não encontrado no HTML. Verifique se copiou o código HTML do modal.");
+            // Fallback: Se não achar o modal, pergunta no alert mesmo
+            if(confirm("Confirma o envio?")) {
+                btnConfirmarEnvio.click(); // Simula clique
+            }
         }
     });
 
-    // Fecha ao clicar fora
-    document.addEventListener('click', function(e) {
-        if (e.target !== inputItem && e.target !== listaSugestoes) {
-            listaSugestoes.style.display = 'none';
-        }
-    });
+    // Ações da janela de confirmação
+
+    // Botão voltar (Fechar janela)
+    if(btnCancelarEnvio){
+        btnCancelarEnvio.addEventListener('click', function(){
+            modalConfirmacao.style.display = 'none';
+        });
+    }
+
+    // Botão Confirmar (Envia Realmente)
+    if(btnConfirmarEnvio){
+        btnConfirmarEnvio.addEventListener('click', function(){
+            console.log("ENVIO FINAL: ", dadosProntosParaEnvio);
+
+            // Aqui vai entrar o fetch() para Python
+
+            alert('Sucesso! Solicitação enviada.');
+            modalConfirmacao.style.display = 'none';
+
+            // Reseta tudo
+            itensDaSolicitacao = [];
+            renderizarLista();
+            solicitaForm.reset();
+        });
+    }
 });
