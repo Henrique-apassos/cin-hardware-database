@@ -31,46 +31,88 @@ const mockSolicitacoes = [
         itens: [
             { nome: 'Kit Resistores', qtd: 1 }
         ]
+    },
+    {
+        id: 1024,
+        data_solicitacao: '2026-01-05',
+        data_entrega: '2026-01-06',
+        status: 'Aprovado',
+        itens: [
+            { nome: 'Raspberry Pi 4', qtd: 1 }
+        ]
+    },
+    {
+        id: 1023,
+        data_solicitacao: '2026-01-04',
+        data_entrega: '2026-01-04',
+        status: 'Recusado', // NOVO STATUS: Pedido negado
+        itens: [
+            { nome: 'Osciloscópio Tektronix', qtd: 1 },
+            { nome: 'Gerador de Funções', qtd: 1 }
+        ]
+    },
+    {
+        id: 1026,
+        data_solicitacao: '2026-01-09',
+        data_entrega: '2026-02-26',
+        status: 'Ativo',
+        itens: [
+            { nome: 'CI0571', qtd: 2},
+            { nome: 'Arduino Uno', qtd: 1}
+        ]
     }
 ];
 
 // Funções para a janela de detalhes
-
 function abrirModal(id) {
-    // Acha o pedido correto pelo ID
     const pedido = mockSolicitacoes.find(sol => sol.id === id);
 
     if (pedido) {
-        // Preenche os dados no HTML do Modal
         document.getElementById('m-id').textContent = pedido.id;
         document.getElementById('m-data-sol').textContent = formatarData(pedido.data_solicitacao);
         document.getElementById('m-data-ent').textContent = formatarData(pedido.data_entrega);
         
-        // Status com cor
         const spanStatus = document.getElementById('m-status');
-        spanStatus.textContent = pedido.status;
-        spanStatus.className = 'badges'; // Reseta as classes
+        let statusTexto = pedido.status;
         
-        // Reaproveita a lógica de cores
+        // Reseta as classes anteriores
+        spanStatus.className = 'badges'; 
+
+        // Lógica de Cores do Modal
         const hoje = new Date().toISOString().split('T')[0];
-        if (pedido.status === 'Pendente') spanStatus.classList.add('badge-pendente');
-        else if (pedido.status === 'Ativo' && pedido.data_entrega < hoje) {
-             spanStatus.textContent = 'Atrasado';
-             spanStatus.classList.add('badge-atrasado');
+
+        if (pedido.status === 'Pendente') {
+            spanStatus.classList.add('badge-pendente');
+        } 
+        else if (pedido.status === 'Aprovado') {
+            spanStatus.classList.add('badge-aprovado');
         }
-        else if (pedido.status === 'Ativo') spanStatus.classList.add('badge-ativo');
-        else spanStatus.classList.add('badge-finalizado');
+        else if (pedido.status === 'Recusado') {
+            spanStatus.classList.add('badge-recusado');
+        }
+        else if (pedido.status === 'Ativo') {
+            if (pedido.data_entrega < hoje) {
+                statusTexto = 'Atrasado';
+                spanStatus.classList.add('badge-atrasado');
+            } else {
+                spanStatus.classList.add('badge-ativo');
+            }
+        } 
+        else {
+            spanStatus.classList.add('badge-finalizado');
+        }
+        
+        spanStatus.textContent = statusTexto;
 
         // Lista de Itens
         const lista = document.getElementById('m-lista-itens');
-        lista.innerHTML = ''; // Limpa lista anterior
+        lista.innerHTML = '';
         pedido.itens.forEach(item => {
             const li = document.createElement('li');
             li.textContent = `${item.qtd}x - ${item.nome}`;
             lista.appendChild(li);
         });
 
-        // Mostra o Modal (Muda o display para flex)
         document.getElementById('modal-detalhes').style.display = 'flex';
     }
 }
@@ -95,31 +137,48 @@ function formatarData(dataISO) {
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-
-    // --- CORREÇÃO DO BOTÃO FECHAR ---
+    // Configuração dos botões de fechar modal
     const modal = document.getElementById('modal-detalhes');
     const btnFechar = document.querySelector('.close-btn');
 
-    // 1. Função para fechar (agora interna e segura)
-    function fecharModal() {
-        modal.style.display = 'none';
-    }
+    if (btnFechar) btnFechar.addEventListener('click', fecharModal);
 
-    // 2. Adiciona o evento de clique no X
-    if(btnFechar) {
-        btnFechar.addEventListener('click', fecharModal);
-    }
+    window.addEventListener('click', function (event) {
+        if (event.target == modal) fecharModal();
+    });
 
-    // 3. Adiciona o evento de clicar fora para fechar (Opcional, mas útil)
-    window.addEventListener('click', function(event) {
-        if (event.target == modal) {
-            fecharModal();
-        }
+    const botoesFiltro = document.querySelectorAll('.btn-filtro');
+    
+    // Lógica dos filtros
+    botoesFiltro.forEach(btn => {
+        btn.addEventListener('click', () => {
+            botoesFiltro.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const categoria = btn.dataset.status;
+
+            const dadosFiltrados = mockSolicitacoes.filter(item => {
+                const hoje = new Date().toISOString().split('T')[0];
+                let statusReal = item.status.toLowerCase();
+                if (item.status === 'Ativo' && item.data_entrega < hoje) {
+                    statusReal = 'atrasado';
+                }
+                else if (item.status === 'Ativo' && item.data_entrega >= hoje) {
+                    statusReal = 'ativo';
+                }
+
+                if (categoria === 'todos') return true;
+                return statusReal === categoria;
+            });
+            renderizarTabela(dadosFiltrados);
+        });
     });
 
     // Função para renderizar tabela
-    function renderizarTabela(dados){
+    function renderizarTabela(dados) {
         const tbody = document.getElementById('lista-corpo');
+
+        // Contadores do dashboard
         const countAtivos = document.getElementById('count-ativos');
         const countPendentes = document.getElementById('count-pendentes');
         const countAtrasados = document.getElementById('count-atrasados'); // Faltava capturar este elemento
@@ -128,32 +187,44 @@ document.addEventListener('DOMContentLoaded', function(){
         let totalPendentes = 0;
         let totalAtrasados = 0; // Nova variável para contagem
 
-        tbody.innerHTML = ''; 
+        tbody.innerHTML = '';
 
         dados.forEach(sol => {
             // Lógica de Data (Verifica se está atrasado)
             const hoje = new Date().toISOString().split('T')[0];
-            let statusFinal = sol.status;
+            let statusVisual = sol.status;
             let classeBadge = '';
 
-            if(sol.status === 'Ativo' && sol.data_entrega < hoje){
-                statusFinal = 'Atrasado';
+            // Lógica principal de Status
+            if (sol.status === 'Pendente') {
+                classeBadge = 'badge-pendente';
+                totalPendentes++;
             }
-
-            // Contagem (Baseada no status JÁ atualizado)
-            if(statusFinal === 'Ativo') totalAtivos++;
-            else if(statusFinal === 'Pendente') totalPendentes++;
-            else if(statusFinal === 'Atrasado') totalAtrasados++;
-
-            // Definição de Cores (CSS)
-            if(statusFinal === 'Pendente') classeBadge = 'badge-pendente';
-            else if(statusFinal === 'Ativo') classeBadge = 'badge-ativo';
-            else if(statusFinal === 'Atrasado') classeBadge = 'badge-atrasado';
-            else classeBadge = 'badge-finalizado';
+            else if (sol.status === 'Aprovado') {
+                classeBadge = 'badge-aprovado';
+            }
+            else if (sol.status === 'Recusado') {
+                classeBadge = 'badge-recusado';
+            }
+            else if (sol.status === 'Ativo') {
+                // Verifica atraso somente se já estiver com o aluno (ativo)
+                if (sol.data_entrega < hoje) {
+                    statusVisual = 'Atrasado';
+                    classeBadge = 'badge-atrasado';
+                    totalAtrasados++;
+                }
+                else {
+                    classeBadge = 'badge-ativo'
+                    totalAtivos++;
+                }
+            }
+            else {
+                classeBadge = 'badge-finalizado'
+            }
 
             // Renderização HTML
             const resumoItens = sol.itens.map(i => `${i.nome} (${i.qtd})`).join(', ');
-            
+
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>#${sol.id}</td>
@@ -164,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function(){
                    </div>
                </td>
                <td>${formatarData(sol.data_entrega)}</td>
-                <td><span class="badges ${classeBadge}">${statusFinal}</span></td>
+                <td><span class="badges ${classeBadge}">${statusVisual}</span></td>
                <td>
                     <button class="bnt-detalhes" onclick="abrirModal(${sol.id})">Detalhes</button>
                 </td>
@@ -173,11 +244,11 @@ document.addEventListener('DOMContentLoaded', function(){
         });
 
         // Atualiza os cards no HTML
-        if(countAtivos) countAtivos.textContent = totalAtivos;
+        if (countAtivos) countAtivos.textContent = totalAtivos;
 
-        if(countPendentes) {
+        if (countPendentes) {
             countPendentes.textContent = totalPendentes;
-            
+
             // Pega a DIV pai (o card)
             const cardPendente = countPendentes.parentElement;
 
@@ -190,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         }
 
-        if(countAtrasados) {
+        if (countAtrasados) {
             countAtrasados.textContent = totalAtrasados;
             // Pega a DIV pai do número (a <div class="card-status">)
             const cardContainer = countAtrasados.parentElement;

@@ -22,7 +22,7 @@ header{
     background-color: #ffffff;
     height: 70px;
     width: 100%;
-    border-top: 4px solid #db1e2f; /* Identidade CIn */
+    border-top: 4px solid #db1e2f; 
     box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Sombra suave para destacar do fundo */
     display: flex;
     justify-content: center; /* Centraliza o conteúdo na tela */

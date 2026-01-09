@@ -153,7 +153,7 @@ nav a:active{
 .card-status h3{ margin: 0; font-size: 1rem; color: #555; }
 .card-status p{ margin: 10px 0 0; font-size: 2rem; font-weight: bold; color: #333; }
 
-.card-status.warning{ border-left-color: #db1e2f; }
+.card-status.warning{ border-left-color: #db1e2f !important; }
 .card-status.attention { border-left-color: #ffc107; }
 
 /* Tabela */
@@ -189,31 +189,76 @@ th{ background-color: #f8f9fa; font-weight: bold; }
     line-height: 1.4; /* Ajuste fino do espaçamento */
 }
 
-/* Badges de Status */
+/* Badges(emblemas) de Status */
 .badges{
+    display: inline-block;
     padding: 5px 10px;
     border-radius: 20px;
     font-size: 0.85em;
-    font-weight: bold;
+    font-weight: 700;
     text-transform: uppercase;
+    text-align: center;
+    min-width: 80px;
+    border-style: solid;
+    border-width: 1px;;
 }
 
-.badge-pendente{ background-color: #fff3cd; color: #856404; }
-.badge-ativo{ background-color: #d4edda; color: #155724; }
-.badge-finalizado{ background-color: #d6d8d9; color: #1b1e21; }
-.badge-atrasado{ background-color: #f8d7da; color: #721c24; }
+.badge-pendente{
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-ativo{
+    background-color: #d4edda;
+    color: #155724;
+}
+.badge-finalizado{
+    background-color: #d6d8d9;
+    color: #1b1e21;
+}
+.badge-atrasado{
+    background-color: #fff4e6;
+    color: #e8590c;
+}
+
+.badge-aprovado{
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.badge-recusado{
+    background-color: #f5c6cb;
+    color: #721c24;
+}
 
 .bnt-detalhes{
-    background: none;
-    border: 1px solid #241786;
-    color: #241786;
-    padding: 8px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-}
-.bnt-detalhes:hover { background-color: #db1e2f; color: white;}
+    /* Estrutura */
+    background-color: transparent;
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 1px solid #db1e2f;
 
+    /* Texto */
+    color: #db1e2f;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    
+    /* Interpretação */
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.bnt-detalhes:hover {
+    background-color: #db1e2f;
+    color: white;
+    box-shadow: 0 4px 10px rgba(219, 30, 47, 0.3);
+    transform: translateY(-2px);
+}
 
 /* Janela de Detalhes */
 .modal-overlay{
@@ -259,8 +304,135 @@ th{ background-color: #f8f9fa; font-weight: bold; }
     margin-bottom: 20px;
 }
 
+/* Barra de Filtros */
+.filtros-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 5px;
+
+    /* Escondendo barra de rolagem (mover com setas)*/
+    -webkit-overflow-scrolling: touch; /* Suavidade no iOS */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Esconde barra de rolagem no Chrome/Safari/Opera */
+.filtros-toolbar::-webkit-scrollbar{
+    display: none;
+}
+
+.btn-filtro {
+    flex: 0 0 auto;
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    color: #666;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-filtro:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.btn-filtro.active {
+    background-color: #db1e2f; 
+    color: white;
+    box-shadow: 0 2px 5px rgba(219, 30, 47, 0.3);
+}
+
+
+
 /* Animação suave de entrada */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsividade Mobile (Telas pequenas) --- */
+@media (max-width: 768px) {
+    /* --- Cards Compactos com Rolagem --- */
+    .dashboard-resumo {
+        display: flex;
+        flex-wrap: nowrap;     /* Força uma única linha */
+        overflow-x: auto;      /* Rolagem horizontal */
+        gap: 10px;             /* Espaço entre eles */
+        padding-bottom: 10px;
+        
+        /* Ajuste para alinhar com a margem da tela */
+        margin-left: -15px;
+        margin-right: -15px;
+        padding-left: 15px;
+        padding-right: 15px;
+        
+        /* Esconde barra de rolagem */
+        scrollbar-width: none; 
+    }
+    .dashboard-resumo::-webkit-scrollbar { display: none; }
+
+    .card-status {
+        /* Tamanho fixo e compacto */
+        flex: 0 0 auto;        /* Não estica nem encolhe */
+        width: 75px;          /* Largura fixa pequena */
+        min-width: 0;          /* Remove limite antigo */
+        
+        padding: 15px 10px;    /* Padding reduzido */
+    }
+
+    /* Reduz a fonte dos números e títulos no celular */
+    .card-status h3 { font-size: 0.8rem; }
+    .card-status p { font-size: 1.5rem; margin-top: 5px; }
+    
+    /* Header e Navegação */
+    .header-container {
+        height: auto;      /* Altura automática para caber tudo */
+        flex-direction: column; /* Um embaixo do outro */
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .brand {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .nav-menu {
+        width: 100%;
+        justify-content: center; /* Centraliza os botões */
+        flex-wrap: wrap; /* Se tiver muitos botões, quebra linha bonito */
+    }
+    
+    .nav-link {
+        font-size: 0.85rem; /* Letra um pouco menor */
+        padding: 8px 10px;
+    }
+    
+        .separator {
+            display: none; /* Esconde a linha vertical no celular */
+        }
+    
+        .table-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+    
+            /* Borda sutil para indicar limite */
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+    
+        /* Garante que a tabela tenha um tamanho mínimo para forçar a rolagem */
+        .tabela-pedidos {
+            min-width: 600px; /* Se a tela for menor que 600px, a barra aparece */
+        }
 }

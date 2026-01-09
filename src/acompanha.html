@@ -47,6 +47,14 @@
 
             <section class="lista-pedidos">
                 <h2>Histórico de Solicitações</h2>
+                <div class="filtros-toolbar">
+                    <button class="btn-filtro active" data-status="todos">Todos</button>
+                    <button class="btn-filtro" data-status="aprovado">Aprovados</button>
+                    <button class="btn-filtro" data-status="ativo">Ativos</button>
+                    <button class="btn-filtro" data-status="atrasado">Atrasados</button>
+                    <button class="btn-filtro" data-status="pendente">Pendentes</button>
+                    <button class="btn-filtro" data-status="finalizado">Finalizados</button>
+                </div>
                 <div class="table-responsive">
                     <table id="tabela-pedidos">
                         <thead>
