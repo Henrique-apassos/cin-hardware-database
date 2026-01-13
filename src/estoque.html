@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque - Lab Hardware</title>
+    <link rel="stylesheet" href="css/estoque.css">
+    <link rel="icon" href="https://www.cin.ufpe.br/~imprensa/marcacinpng/SC" type="image/png">
+    <script src="js/estoque.js"></script>
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="header-content">
+
+            <div class="brand">
+                <img src="https://www.cin.ufpe.br/~imprensa/marcacinpng/SC" alt="Logo" class="logo-cin">
+                <div class="brand-text">
+                    <h1>Controle de Estoque</h1>
+                    <span class="subtitle">Painel do Técnico</span>
+                </div>
+            </div>
+
+            <nav class="admin-nav">
+                <a href="admin.html" class="nav-link">Solicitações</a>
+                <a href="estoque.html" class="nav-link active">Estoque</a>
+                <div class="divider"></div>
+                <a href="login.html" class="btn-sair">Sair</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="container-estorque">
+        <div class="toolbar">
+            <div class="search-box">
+                <span class="material-symbols-outlined">Buscar:</span>
+                <input type="text" id="input-busca" placeholder="Buscar componente (nome, ID ou tipo)...">
+            </div>
+            <a href="" class="btn-novo" style="text-decoration: none;">
+                <span class="material-symbols-outlined">+</span> Novo Componente
+            </a>
+        </div>
+        <div id="contador-area" style="margin-bottom: 15px; padding-left: 5px; color: #666;">
+            Exibindo <strong id="contador-numero" style="color: #333;">0</strong> itens.
+        </div>
+        <div class="tabela-wrapper">
+            <table class="tabela-estoque">
+                <thead>
+                    <tr>
+                        <th width="80">ID</th>
+                        <th>Componente</th>
+                        <th>Descrição</th>
+                        <th>Local</th>
+                        <th width="150" class="text-center">Quantidade</th>
+                        <th width="120" class="text-center">Status</th>
+                        <th width="100" class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-estoque">
+                </tbody>
+            </table>
+        </div>
+        <div id="msg-vazio" class="empty-state" style="display: none;">
+            <p>Nenhum componente encontrado.</p>
+        </div>
+    </main>
+    <div id="modal-item" class="modal-overlay">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="modal-titulo">Detalhes do Componente</h2>
+                <span class="close-btn" onclick="fecharModal()">&times;</span>
+            </div>
+
+            <form id="form-item">
+                <input type="hidden" id="item-id">
+                <input type="hidden" id="item-tipo">
+                <div class="form-row" style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <div class="form-group grow-2" style="flex: 2;">
+                        <label>Nome do Componente</label>
+                        <input type="text" id="item-nome" required class="full-width">
+                    </div>
+                    <div class="form-group grow-1" style="flex: 1;">
+                        <label>Categoria</label>
+                        <input type="text" id="item-cat" required class="full-width">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Localização Padrão / Armazenamento</label>
+                    <input type="text" id="item-local" class="full-width" placeholder="Ex: Armário 2, Prateleira B">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="font-weight:bold;">Quantidade Mínima de Segurança</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <input type="number" id="item-qtd-min" class="full-width" min="1" placeholder="Ex: 5"
+                            style="max-width: 150px;">
+                        <small style="color:#666; line-height: 1.2;">
+                            Defina o ponto crítico (Vermelho).<br>
+                            O sistema avisará (Amarelo) quando estiver próximo desse valor.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Descrição / Observações</label>
+                    <textarea id="item-desc" rows="3"
+                        style="width: 100%; box-sizing:border-box; padding: 10px; border:1px solid #ddd; border-radius:4px;"></textarea>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+                <div id="area-consumivel" style="display: none;">
+                    <div
+                        style="background: #e3f2fd; color: #0d47a1; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
+                        <span class="material-symbols-outlined">layers</span>
+                        <small><strong>Consumível:</strong> Controle feito por quantidade total.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantidade em Estoque</label>
+                        <input type="number" id="qtd-simples" min="0" style="width: 100px; padding: 8px;">
+                    </div>
+                </div>
+
+                <div id="area-equipamento" style="display: none;">
+                    <div
+                        style="background: #fff3e0; color: #e65100; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
+                        <span class="material-symbols-outlined">Atenção</span>
+                        <small><strong>Equipamento:</strong> Controle individual por unidade.</small>
+                    </div>
+
+                    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #eee;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                            <thead style="background: #f9f9f9;">
+                                <tr>
+                                    <th style="padding: 8px; text-align: left;">ID Patrimônio</th>
+                                    <th style="padding: 8px; text-align: left;">Local</th>
+                                    <th style="padding: 8px; text-align: left;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-unidades">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer"
+                    style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" class="btn-cancelar" onclick="fecharModal()"
+                        style="padding: 10px 20px; border: 1px solid #ccc; background: white; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                    <button type="submit" class="btn-salvar"
+                        style="padding: 10px 20px; border: none; background: #db1e2f; color: white; border-radius: 4px; cursor: pointer;">Salvar</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</body>
+
+</html>
