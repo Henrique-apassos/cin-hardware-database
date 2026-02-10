@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Entrada - Lab Hardware</title>
+    <link rel="stylesheet" href="css/cadastro_item.css">
+    <link rel="icon" href="https://www.cin.ufpe.br/~imprensa/marcacinpng/SC" type="image/png">
+    <script src="js/cadastro_item.js"></script>
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="brand">
+                <img src="https://www.cin.ufpe.br/~imprensa/marcacinpng/SC" alt="Logo" class="logo-cin">
+                <div class="brand-text">
+                    <h1>Entrada de Materiais</h1>
+                    <span class="subtitle">Registrar Nova Aquisição</span>
+                </div>
+            </div>
+            <nav class="admin-nav">
+                <a href="estoque.html" class="nav-link">Voltar ao Estoque</a>
+            </nav>
+        </div>
+    </header>
+    <main class="container-adicao">
+
+        <section class="form-card">
+            <div class="card-header">
+                <h3>Identificação do Responsável</h3>
+            </div>
+            <div class="form-row">
+                <div class="form-group grow-2">
+                    <label>Técnico Responsável</label>
+                    <input type="text" id="cpf-tecnico" class="full-width" placeholder="CPF do Técnico Responsável"
+                        required>
+                </div>
+                <div class="form-group grow-1">
+                    <label>Data do Registro</label>
+                    <div id="data-entrada" class="static-data-display">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-card">
+            <div class="card-header">
+                <h3>Detalhes do Componente</h3>
+            </div>
+
+            <form id="form-add-temp">
+                <div class="form-row">
+                    <div class="form-group grow-1">
+                        <label>Tipo</label>
+                        <select id="novo-tipo" class="full-width" onchange="alternarCamposTipo()">
+                            <option value="consumivel">Consumível</option>
+                            <option value="equipamento">Equipamento</option>
+                        </select>
+                    </div>
+                    <div class="form-group grow-2">
+                        <label>Nome do Item</label>
+                        <input type="text" id="novo-nome" class="full-width" placeholder="Ex: Multímetro, Cabo HDMI..."
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group grow-1">
+                        <label>Quantidade</label>
+                        <input type="number" id="novo-qtd" class="full-width" min="1" value="1">
+                    </div>
+                    <div class="form-group grow-1">
+                        <label>Localização</label>
+                        <input type="text" id="novo-local" class="full-width" placeholder="Gaveta, Armário...">
+                    </div>
+                    <div class="form-group grow-1">
+                        <label>Qtd. Mínima</label>
+                        <input type="number" id="novo-min" class="full-width" value="5">
+                    </div>
+                </div>
+
+                <div id="campo-equipamento-extra" class="alert-box" style="display: none;">
+                    <label>Prefixo de Patrimônio</label>
+                    <input type="text" id="novo-prefixo" placeholder="Ex: OSC-">
+                </div>
+
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="novo-desc" rows="2" class="full-width"></textarea>
+                </div>
+
+                <div class="button-row">
+                    <button type="submit" class="btn-add-item">
+                        Adicionar à Lista
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section id="area-lista" class="list-card" style="display: none;">
+            <div class="card-header">
+                <span class="material-symbols-outlined">fact_check</span>
+                <h3>Itens Prontos para Entrada</h3>
+            </div>
+
+            <div class="tabela-wrapper-clean">
+                <table class="tabela-estoque">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th class="text-center">Qtd</th>
+                            <th>Local</th>
+                            <th class="text-center">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-novos"></tbody>
+                </table>
+            </div>
+
+            <div class="final-actions">
+                <button onclick="abrirModalConfirmacao()" class="btn-confirmar">
+                    Finalizar e Salvar no Sistema
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal-confirmacao" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Confirmar Registro?</h3>
+        <div class="modal-body-info">
+            <p><strong>Responsável (CPF):</strong> <span id="resp-modal"></span></p>
+            <p><strong>Data:</strong> <span id="data-modal"></span></p>
+            <p><strong>Total de Itens:</strong> <span id="total-itens-modal"></span></p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancelar" onclick="fecharModal()">Voltar</button>
+            <button class="btn-confirmar" onclick="salvarTudo()">Confirmar</button>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

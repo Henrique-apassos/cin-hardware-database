@@ -1,0 +1,252 @@
+/*Configurações Gerais*/
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+.admin-header {
+    background-color: #fff;
+    border-top: 4px solid #db1e2f;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 20px 0; 
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Marca (Logo + Texto) */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-cin {
+    height: 75px; 
+    width: auto;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.subtitle {
+    font-size: 0.75rem;
+    color: #db1e2f;
+    font-weight: 700;
+}
+
+/* Navegação */
+.admin-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #db1e2f;
+}
+
+.divider {
+    width: 1px;
+    height: 20px;
+    background-color: #ddd;
+}
+
+.btn-sair {
+    text-decoration: none;
+    color: #db1e2f;
+    border: 1px solid #db1e2f;
+    padding: 6px 15px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.btn-sair:hover {
+    background-color: #db1e2f;
+    color: white;
+}
+
+/* Parte pricipal */
+.container-adicao {
+    width: 90%; 
+    max-width: 1000px;
+    margin: 40px auto; 
+    padding: 0 15px;  
+    box-sizing: border-box;
+}
+
+/* --- Estilo dos Cards (Parecido com a Solicitação) --- */
+.form-card, .list-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+    border: 1px solid #eef0f2;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #db1e2f; /* Vermelho CIn */
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* --- Elementos de Formulário --- */
+.form-group label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.static-data-display {
+    padding: 12px 0; /* Alinha verticalmente com o input ao lado */
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+    display: block;
+    border: none;
+    background: transparent;
+}
+
+input.full-width, select.full-width, textarea.full-width {
+    border: 1.5px solid #eaedf0;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+input:focus {
+    border-color: #db1e2f;
+    background: #fffafa;
+}
+
+/* --- Botão de Adicionar (Estilo de Ação) --- */
+.btn-add-item {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+}
+
+.btn-add-item:hover { background: #000; }
+
+.button-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+}
+
+/* --- Caixa de Alerta (Equipamentos) --- */
+.alert-box {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 4px;
+}
+
+/* --- Tabela do "Carrinho" --- */
+.tabela-wrapper-clean {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Botão Finalizar (Verde Sucesso) */
+.btn-confirmar {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: opacity 0.2s;
+}
+
+.btn-confirmar:hover { opacity: 0.9; }
+
+.final-actions {
+    margin-top: 25px;
+}
+
+/* Animação ao adicionar */
+@keyframes popIn {
+    0% { opacity: 0; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.nova-linha {
+    animation: popIn 0.3s ease-out;
+    background-color: #f8fff9;
+}
+
+.modal-overlay {
+    display: none; /* Alterado para flex via JS */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-body-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    text-align: left;
+}

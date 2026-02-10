@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitações - Lab Hardware</title>
+    <link rel="stylesheet" href="css/acompanha_tec.css">
+    <link rel="icon" href="https://www.cin.ufpe.br/~imprensa/marcacinpng/SC" type="image/png">
+    <script src="js/acompanha_tec.js"></script>
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="brand">
+                <img src="https://www.cin.ufpe.br/~imprensa/marcacinpng/SC" alt="Logo" class="logo-cin">
+                <div class="brand-text">
+                    <h1>Painel de Solicitações</h1>
+                    <span class="subtitle">Gerenciamento de Pedidos</span>
+                </div>
+            </div>
+            <nav class="admin-nav">
+                <a href="acompanha_tec.html" class="nav-link active">Solicitações</a>
+                <a href="estoque.html" class="nav-link">Estoque</a>
+
+                <div class="divider"></div>
+                <a href="login.html" class="btn-sair">Sair</a>
+            </nav>
+        </div>
+    </header>
+    <main class="admin-container">
+        <section class="admin-summary">
+            <div class="stat-card">
+                <span class="label">Novas Solicitações</span>
+                <span class="value" id="count-novas">0</span>
+            </div>
+            <div class="stat-card warning">
+                <span class="label">Aguardando Retirada</span>
+                <span class="value" id="count-retirada">0</span>
+            </div>
+            <div class="stat-card attention">
+                <span class="label">Em posse (Atrasados)</span>
+                <span class="value" id="count-atrasados">0</span>
+            </div>
+        </section>
+        <section class="admin-table-section">
+            <div class="section-header-center">
+                <h2>Gerenciamento de Pedidos</h2>
+                <p>Busque por nome do aluno, ID ou login</p>
+            </div>
+
+            <div class="search-hero">
+                <span class="material-symbols-outlined search-icon">search</span>
+                <input type="text" id="search-pedido" placeholder="Digite para filtrar..." autocomplete="off">
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Aluno</th>
+                            <th>Data Pedido</th>
+                            <th>Itens</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-lista-corpo">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <div id="modal-detalhes" class="modal-overlay">
+        <div class="modal-content">
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid #eee; padding-bottom:15px;">
+                <h2 style="margin:0;">Solicitação <span id="det-id"></span></h2>
+                <div id="det-status"></div>
+            </div>
+
+            <div class="detalhes-grid">
+                <div class="info-group">
+                    <label>Aluno</label>
+                    <p id="det-aluno"></p>
+                    <small id="det-login" style="color:#888"></small>
+                </div>
+                <div class="info-group">
+                    <label>Data do Pedido</label>
+                    <p id="det-data"></p>
+                </div>
+                <div class="info-group">
+                    <label id="det-label-prazo">Previsão de Devolução</label>
+                    <p id="det-devolucao" style="font-weight: bold;"></p>
+                </div>
+                <div class="info-group">
+                    <label>Finalidade</label>
+                    <p id="det-finalidade"></p>
+                </div>
+            </div>
+
+            <h3 style="font-size:0.9rem; border-bottom:1px solid #eee; padding-bottom:5px;">Itens do Pedido</h3>
+            <table style="width:100%; margin-bottom:20px;">
+                <thead style="background:#f8f9fa;">
+                    <tr>
+                        <th style="text-align:left; padding:8px;">Item</th>
+                        <th style="text-align:center; padding:8px;">Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody id="det-lista-itens"></tbody>
+            </table>
+
+            <div id="det-area-entrega"
+                style="display:none; margin-top:20px; padding:15px; background:#e3f2fd; border-radius:8px; border:1px solid #bbdefb;">
+                <h4 style="margin:0 0 10px 0; color:#0d47a1;">Finalizar Entrega</h4>
+                <div style="display:flex; align-items:flex-end; gap:15px;">
+                    <div style="flex:1;">
+                        <label style="font-size:0.75rem; font-weight:bold; color:#0d47a1;">Definir Data de
+                            Devolução</label>
+                        <input type="date" id="det-input-data"
+                            style="width:100%; padding:8px; border-radius:4px; border:1px solid #90caf9; margin-top:5px;">
+                    </div>
+                    <button class="btn-adm btn-deliver" onclick="confirmarEntregaPeloModal()"
+                        style="padding: 10px 20px;">Confirmar Saída</button>
+                </div>
+            </div>
+
+            <div style="text-align:right; margin-top: 20px;">
+                <button class="btn-adm btn-finish" onclick="fecharModalDetalhes()">Fechar Janela</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
