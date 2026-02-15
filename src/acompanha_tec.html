@@ -51,9 +51,17 @@
             </div>
 
             <div class="search-hero">
-                <span class="material-symbols-outlined search-icon">search</span>
+                <span class="material-symbols-outlined search-icon">Buscar:</span>
                 <input type="text" id="search-pedido" placeholder="Digite para filtrar..." autocomplete="off">
             </div>
+            <div class="filtros-toolbar">
+                    <button class="btn-filtro active" data-status="todos">Todos</button>
+                    <button class="btn-filtro" data-status="aprovado">Aprovados</button>
+                    <button class="btn-filtro" data-status="ativo">Ativos</button>
+                    <button class="btn-filtro" data-status="atrasado">Atrasados</button>
+                    <button class="btn-filtro" data-status="pendente">Pendentes</button>
+                    <button class="btn-filtro" data-status="finalizado">Finalizados</button>
+                </div>
 
             <div class="table-responsive">
                 <table>
@@ -107,6 +115,7 @@
                     <tr>
                         <th style="text-align:left; padding:8px;">Item</th>
                         <th style="text-align:center; padding:8px;">Quantidade</th>
+                        <th style="text-align:center; padding:8px;">ID / Patrimônio</th>
                     </tr>
                 </thead>
                 <tbody id="det-lista-itens"></tbody>

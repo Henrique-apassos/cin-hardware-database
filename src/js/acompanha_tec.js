@@ -21,11 +21,14 @@ let solicitacoes = [
     }
 ];
 
+// Variáveis de controle globais para o filtro
+let filtroStatusAtual = 'todos';
+let termoBuscaAtual = '';
+
 /* --- INICIALIZAÇÃO --- */
 document.addEventListener('DOMContentLoaded', () => {
     renderizarPainel();
-    configurarBusca();
-    configurarFiltrosCards();
+    configurarSistemaDeFiltros()
 });
 
 /* --- RENDERIZAÇÃO DA TABELA --- */
@@ -45,7 +48,12 @@ function renderizarPainel(dadosParaExibir = solicitacoes) {
 
         tr.innerHTML = `
             <td>#${sol.id}</td>
-            <td><strong>${sol.aluno}</strong><br><small>${sol.login}</small></td>
+            <td>
+                <div class="aluno-cell">
+                    <strong>${sol.aluno}</strong>
+                    <small>${sol.login}</small>
+                </div>
+            </td>
             <td>${formatarData(sol.data)}</td>
             <td>${resumoItens}</td>
             <td>
@@ -54,13 +62,66 @@ function renderizarPainel(dadosParaExibir = solicitacoes) {
                 </span>
             </td>
             <td class="acoes-cell">
-                <button class="btn-ver-texto" onclick="verDetalhes(${sol.id})">Detalhes</button>
+                <button class="btn-detalhes" onclick="verDetalhes(${sol.id})">Detalhes</button>
                 ${gerenciarBotoes(sol)}
             </td>
         `;
         tbody.appendChild(tr);
     });
     atualizarContadores();
+}
+
+/* --- SISTEMA DE FILTRO CENTRALIZADO --- */
+function configurarSistemaDeFiltros() {
+    const inputBusca = document.getElementById('search-pedido');
+    const botoesFiltro = document.querySelectorAll('.btn-filtro');
+
+    // 1. Escuta a barra de busca
+    if (inputBusca) {
+        inputBusca.addEventListener('input', (e) => {
+            termoBuscaAtual = e.target.value.toLowerCase();
+            aplicarFiltros();
+        });
+    }
+
+    // 2. Escuta os botões de filtro (chips)
+    botoesFiltro.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Atualiza visual dos botões
+            botoesFiltro.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Define o novo status e filtra
+            filtroStatusAtual = btn.dataset.status;
+            aplicarFiltros();
+        });
+    });
+}
+
+function aplicarFiltros() {
+    const hoje = new Date().toISOString().split('T')[0];
+
+    const dadosFiltrados = solicitacoes.filter(sol => {
+        // Lógica de Status Real (Ativo vs Atrasado)
+        let statusParaFiltro = sol.status.toLowerCase();
+        if (sol.status === 'Ativo' && sol.devolucao < hoje) {
+            statusParaFiltro = 'atrasado';
+        }
+
+        // Critério 1: O chip selecionado condiz?
+        const passaNoFiltro = filtroStatusAtual === 'todos' || statusParaFiltro === filtroStatusAtual;
+
+        // Critério 2: O termo da busca condiz?
+        const passaNaBusca = 
+            sol.aluno.toLowerCase().includes(termoBuscaAtual) ||
+            sol.login.toLowerCase().includes(termoBuscaAtual) ||
+            sol.id.toString().includes(termoBuscaAtual) ||
+            sol.itens.some(i => i.nome.toLowerCase().includes(termoBuscaAtual));
+
+        return passaNoFiltro && passaNaBusca;
+    });
+
+    renderizarPainel(dadosFiltrados);
 }
 
 /* --- LÓGICA DO MODAL (Com Data de Devolução) --- */
@@ -97,21 +158,35 @@ function verDetalhes(id) {
     const areaEntrega = document.getElementById('det-area-entrega');
     if (sol.status === 'Aprovado') {
         areaEntrega.style.display = 'block';
-        // Sugere data padrão de 7 dias à frente
         const sugestao = new Date();
         sugestao.setDate(sugestao.getDate() + 7);
         document.getElementById('det-input-data').value = sugestao.toISOString().split('T')[0];
     } else {
         areaEntrega.style.display = 'none';
-    }
+    }   
 
     const tbody = document.getElementById('det-lista-itens');
-    tbody.innerHTML = sol.itens.map(item => `
-        <tr>
-            <td style="text-align:left;">${item.nome}</td>
-            <td style="text-align:center;"><strong>${item.qtd}</strong></td>
-        </tr>
-    `).join('');
+    tbody.innerHTML = sol.itens.map((item, index) => {
+        let campoID = '';
+        
+        // Se estiver aprovado, mostra o input para preencher o patrimônio
+        if (sol.status === 'Aprovado') {
+            campoID = `<input type="text" class="input-patrimonio" data-index="${index}" 
+                        placeholder="Ex: OSC-001" 
+                        style="width: 80%; padding: 5px; border: 1px solid #90caf9; border-radius: 4px;">`;
+        } else {
+            // Se já foi entregue ou finalizado, mostra o ID que foi gravado
+            campoID = item.patrimonio || '<span style="color:#ccc">N/A</span>';
+        }
+
+        return `
+            <tr>
+                <td style="text-align:left; padding: 10px 8px;">${item.nome}</td>
+                <td style="text-align:center;"><strong>${item.qtd}</strong></td>
+                <td style="text-align:center;">${campoID}</td>
+            </tr>
+        `;
+    }).join('');
 
     document.getElementById('modal-detalhes').style.display = 'flex';
     document.body.style.overflow = 'hidden';
@@ -120,14 +195,28 @@ function verDetalhes(id) {
 function confirmarEntregaPeloModal() {
     const id = parseInt(document.getElementById('det-id').innerText.replace('#', ''));
     const dataEscolhida = document.getElementById('det-input-data').value;
-
-    if (!dataEscolhida) {
-        alert("Selecione uma data de devolução.");
-        return;
-    }
-
+    
+    // Coleta todos os inputs de patrimônio preenchidos
+    const inputsPatrimonio = document.querySelectorAll('.input-patrimonio');
+    let todosPreenchidos = true;
+    
     const sol = solicitacoes.find(s => s.id === id);
+    
     if (sol) {
+        // Salva os IDs de patrimônio dentro de cada item da solicitação
+        inputsPatrimonio.forEach(input => {
+            const idx = input.getAttribute('data-index');
+            const valor = input.value.trim();
+            
+            if (!valor) todosPreenchidos = false;
+            sol.itens[idx].patrimonio = valor; // Grava o ID no objeto original
+        });
+
+        if (!dataEscolhida || !todosPreenchidos) {
+            alert("Por favor, selecione a data de devolução e informe o ID de todos os itens antes de confirmar.");
+            return;
+        }
+
         sol.status = 'Ativo';
         sol.devolucao = dataEscolhida;
         fecharModalDetalhes();
@@ -170,18 +259,8 @@ function mudarStatus(id, novoStatus) {
 }
 
 /* --- FILTROS E UTILITÁRIOS --- */
-function configurarBusca() {
-    const inputBusca = document.getElementById('search-pedido');
-    if (inputBusca) {
-        inputBusca.addEventListener('input', (e) => {
-            const termo = e.target.value.toLowerCase();
-            const filtrados = solicitacoes.filter(sol => 
-                sol.aluno.toLowerCase().includes(termo) || sol.id.toString().includes(termo)
-            );
-            renderizarPainel(filtrados);
-        });
-    }
-}
+
+
 
 function configurarFiltrosCards() {
     const cards = document.querySelectorAll('.stat-card');
