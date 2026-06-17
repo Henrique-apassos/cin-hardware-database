@@ -1,6 +1,7 @@
 import sqlite3
 
 def create_tables(conn):
+    conn.execute("PRAGMA foreign_keys = ON;")
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -9,7 +10,7 @@ def create_tables(conn):
     NOME TEXT NOT NULL,
     EMAIL TEXT UNIQUE,
     SENHA TEXT NOT NULL
-);
+    );
     """)
 
     cursor.execute("""
@@ -168,3 +169,5 @@ def create_tables(conn):
 
 conn = sqlite3.connect("./Database/cin_hardware.db")
 create_tables(conn)
+
+conn.close()

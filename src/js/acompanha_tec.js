@@ -47,16 +47,16 @@ function renderizarPainel(dadosParaExibir = solicitacoes) {
             : sol.itens[0].nome;
 
         tr.innerHTML = `
-            <td>#${sol.id}</td>
-            <td>
+            <td data-label="ID">#${sol.id}</td>
+            <td data-label="Aluno">
                 <div class="aluno-cell">
                     <strong>${sol.aluno}</strong>
                     <small>${sol.login}</small>
                 </div>
             </td>
-            <td>${formatarData(sol.data)}</td>
-            <td>${resumoItens}</td>
-            <td>
+            <td data-label="Data">${formatarData(sol.data)}</td>
+            <td data-label="Itens">${resumoItens}</td>
+            <td data-label="Status">
                 <span class="badges badge-${sol.status.toLowerCase()} ${isAtrasado ? 'badge-atrasado' : ''}">
                     ${isAtrasado ? 'Atrasado' : sol.status}
                 </span>
@@ -239,7 +239,7 @@ function gerenciarBotoes(sol) {
     } else if (sol.status === 'Aprovado') {
         return `<button class="btn-adm btn-deliver" onclick="mudarStatus(${sol.id}, 'Ativo')">Entregar</button>`;
     } else if (sol.status === 'Ativo') {
-        return `<button class="btn-adm btn-finish" onclick="mudarStatus(${sol.id}, 'Finalizado')">Devolução</button>`;
+        return `<button class="btn-adm btn-finish" onclick="mudarStatus(${sol.id}, 'Finalizado')">Devolver</button>`;
     }
     return `<small style="color:#999">Concluído</small>`;
 }

@@ -12,7 +12,11 @@ body {
     background-color: #fff;
     border-top: 4px solid #db1e2f;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    padding: 20px 0; 
+    padding: 20px 0;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .header-content {
@@ -22,6 +26,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 /* Marca (Logo + Texto) */
@@ -137,6 +142,26 @@ body {
     color: #333;
 }
 
+.search-hero{
+    flex: 1;
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.search-hero input {
+    border: none;
+    outline: none;
+    width: 100%;
+    margin-left: 10px;
+    font-size: 0.95rem;
+    color: #555;
+}
+
 /* Tabela Adm */
 .admin-table-section {
     width:100%;          
@@ -148,7 +173,6 @@ body {
     box-sizing: border-box;
 }
 
-/* --- A MÁGICA DO ALINHAMENTO FIXO --- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -301,12 +325,11 @@ th {
     overflow-y: auto;
 }
 
-
-
 /* Barra de Filtros */
 .filtros-toolbar {
     display: flex;
     gap: 10px;
+    margin-top: 7px;
     margin-bottom: 15px;
 
     justify-content: center;
@@ -370,4 +393,100 @@ th {
 .info-group p {
     margin: 5px 0;
     font-size: 1rem;
+}
+
+/* --- RESPONSIVIDADE (CELULAR) --- */
+@media (max-width: 768px) {
+    .logo-cin {
+        height: 50px; /* Reduz o logo no celular para o header não ocupar meia tela */
+    }
+    
+    .admin-container {
+        margin-top: 20px; /* Espaço entre o header grudento e os cards */
+    }
+    /* Ajuste de margens do container */
+    .admin-container {
+        padding: 0 10px;
+        margin: 20px auto;
+    }
+
+    /* Cards de resumo em coluna única */
+    .admin-summary {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    /* Barra de busca ocupando a largura toda */
+    .search-hero {
+        margin-bottom: 20px;
+    }
+
+    /* TRANSFORMANDO A TABELA EM CARDS */
+    /* Esconde o cabeçalho original da tabela */
+    table thead {
+        display: none;
+    }
+
+    table, tbody, tr, td {
+        display: block;
+        width: 100%;
+    }
+
+    tr {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        padding: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    td {
+        text-align: left !important;
+        padding: 8px 5px;
+        border-bottom: 1px dashed #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    td:last-child {
+        border-bottom: none;
+        flex-direction: column; /* Botões um em cima do outro ou lado a lado no mobile */
+        gap: 10px;
+    }
+
+    /* Adiciona labels automáticos para cada dado via CSS */
+    td::before {
+        content: attr(data-label); /* Pega o texto do atributo data-label */
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        color: #db1e2f;
+    }
+
+    /* Ajuste dos botões na célula de ações */
+    .acoes-cell {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    .btn-adm, .btn-detalhes {
+        flex: 1;
+        text-align: center;
+        padding: 12px; /* Maior para facilitar o toque */
+    }
+
+    /* Ajuste do Modal no Mobile */
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+        max-height: 95vh;
+    }
+
+    .detalhes-grid {
+        grid-template-columns: 1fr; /* Coluna única no modal */
+        gap: 15px;
+    }
 }

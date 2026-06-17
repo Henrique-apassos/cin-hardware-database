@@ -304,3 +304,5 @@ INSERT INTO compra (CPF, id_item, data_compra, quantidade_compra) VALUES
 """)
 
 conn.commit()
+
+conn.close()
